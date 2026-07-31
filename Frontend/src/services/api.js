@@ -7,7 +7,7 @@ import axios from "axios";
 import { auth } from "../config/firebase";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "https://weathernow-backend-7tmm.onrender.com/api",
   timeout: 15000,
 });
 
