@@ -1,0 +1,15 @@
+# Node modules
+node_modules/
+Backend/node_modules/
+Frontend/node_modules/
+
+# Env & Keys
+.env
+Backend/.env
+Frontend/.env
+serviceAccountKey.json
+Backend/serviceAccountKey.json
+
+# Build outputs
+Frontend/dist/
+Frontend/build/

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="vi" class="dark scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%8C%A4%EF%B8%8F</text></svg>"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0E1826" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="WeatherNow Pro — Hệ thống theo dõi & dự báo thời tiết thông minh theo thời gian thực: nhiệt độ hiện tại, dự báo 24 giờ, 7 ngày và chỉ số chất lượng không khí (AQI)."
+    />
+
+    <!-- Open Graph / chia sẻ mạng xã hội -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="WeatherNow Pro — Smart Weather Forecasting" />
+    <meta
+      property="og:description"
+      content="Dự báo thời tiết thời gian thực, chi tiết theo giờ và theo ngày, cùng chỉ số AQI/UV."
+    />
+    <meta property="og:image" content="/og-cover.png" />
+
+    <!-- Web App / PWA cơ bản -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="WeatherNow" />
+
+    <!-- Google Fonts: khớp với tailwind.config.js (display / body / data) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <title>WeatherNow Pro — Smart Weather Forecasting System</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      /* Custom scrollbar theo bảng màu ink/slate */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #0e1826;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #2c3e58;
+        border-radius: 9999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #5b8def;
+      }
+
+      html,
+      body {
+        margin: 0;
+        background-color: #0e1826;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        color: #f3f6f9;
+        background-image: radial-gradient(at 15% 0%, rgba(91, 141, 239, 0.16) 0px, transparent 55%),
+          radial-gradient(at 100% 0%, rgba(232, 163, 61, 0.1) 0px, transparent 50%),
+          radial-gradient(at 50% 100%, rgba(73, 198, 185, 0.08) 0px, transparent 55%);
+        background-attachment: fixed;
+      }
+
+      .glass-card {
+        background: rgba(28, 42, 64, 0.55);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      /* Preloader */
+      #app-preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        background: #0e1826;
+        transition: opacity 0.45s ease, visibility 0.45s ease;
+      }
+
+      #app-preloader .sun {
+        position: relative;
+        width: 56px;
+        height: 56px;
+        border-radius: 9999px;
+        background: radial-gradient(circle at 35% 30%, #f4c878, #e8a33d 70%);
+        box-shadow: 0 0 40px 6px rgba(232, 163, 61, 0.35);
+        animation: pulse 1.8s ease-in-out infinite;
+      }
+
+      #app-preloader .cloud {
+        position: absolute;
+        bottom: -10px;
+        right: -22px;
+        width: 46px;
+        height: 26px;
+        background: #f3f6f9;
+        border-radius: 9999px;
+        opacity: 0.92;
+        animation: drift 3.2s ease-in-out infinite;
+      }
+      #app-preloader .cloud::before,
+      #app-preloader .cloud::after {
+        content: "";
+        position: absolute;
+        background: #f3f6f9;
+        border-radius: 9999px;
+      }
+      #app-preloader .cloud::before {
+        width: 26px;
+        height: 26px;
+        top: -14px;
+        left: 4px;
+      }
+      #app-preloader .cloud::after {
+        width: 18px;
+        height: 18px;
+        top: -8px;
+        left: 24px;
+      }
+
+      #app-preloader p {
+        margin: 0;
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 600;
+        letter-spacing: 2px;
+        color: #93a5bc;
+        font-size: 13px;
+        text-transform: uppercase;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 40px 6px rgba(232, 163, 61, 0.35);
+        }
+        50% {
+          transform: scale(1.08);
+          box-shadow: 0 0 52px 10px rgba(232, 163, 61, 0.5);
+        }
+      }
+
+      @keyframes drift {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        50% {
+          transform: translateX(6px);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #app-preloader .sun,
+        #app-preloader .cloud {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased selection:bg-rain selection:text-cloud min-h-screen flex flex-col overflow-x-hidden">
+    <!-- Preloader khi ứng dụng đang load React/Vite -->
+    <div id="app-preloader" aria-hidden="true">
+      <div class="sun">
+        <div class="cloud"></div>
+      </div>
+      <p>WeatherNow Pro</p>
+    </div>
+
+    <!-- Nơi React Mount App -->
+    <div id="root" class="flex-1 flex flex-col"></div>
+
+    <!-- Tự động ẩn Preloader khi React đã render xong -->
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const preloader = document.getElementById("app-preloader");
+        if (!preloader) return;
+        const hide = () => {
+          preloader.style.opacity = "0";
+          preloader.style.visibility = "hidden";
+          preloader.addEventListener("transitionend", () => preloader.remove(), { once: true });
+        };
+        // Đợi 1 khung hình để tránh giật khi React vừa mount xong
+        requestAnimationFrame(() => setTimeout(hide, 250));
+      });
+    </script>
+
+    <!-- Nhúng điểm đầu vào chính của React -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
