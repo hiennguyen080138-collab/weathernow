@@ -19,7 +19,16 @@ const PORT = process.env.PORT || 5000;
 
 // ==== Middlewares chung ====
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://weathernow-frontend.vercel.app", // Thay bằng domain Vercel thực tế của bạn
+      "http://localhost:5173",
+      "http://localhost:3000",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 
